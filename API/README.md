@@ -97,10 +97,6 @@ brew install jq
 curl -s http://localhost:5066/WeatherForecast | jq .
 ```
 
-In a browser, you can also use swagger:
-
-http://localhost:5066/swagger/index.html
-
 Update ports and https configuration:
 
 API/Properties/launchSettings.json
@@ -169,7 +165,7 @@ public class AppUser
 
 Definition: it's an ORM
 
-LINQ (language-INtegrated Query) to SQL
+LINQ (Language-INtegrated Query)
 
 Features: Querying, Change Tracking, Saving, Concurrency, Transactions, Caching, Built-in conventions Configurations, Migrations.
 
@@ -218,3 +214,92 @@ dotnet ef migrations add InititalCreate -o Data/Migrations
 ```bash
 dotnet ef database update
 ```
+
+## Http Request
+
+### Allow CORS
+
+Example for Angular dev: "localhost:4200"
+
+Program.cs
+```csharp
+...
+// builder
+builder.Services.AddCors();
+...
+// middleware
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200","https://localhost:4200"));
+...
+```
+
+### Adding HTTPS to Angular with mkcert
+
+At root of angular project:
+
+```bash
+mkdir ssl && cd ssl 
+```
+
+Create a local certificate authority:
+
+```bash
+mkcert -install
+```
+
+Create a certificate for localhost:
+
+```bash
+mkcert localhost
+```
+
+In angular.json add ssl, key and certificate:
+
+```json
+{
+  "serve": {
+    "options": {
+      "ssl": true,
+      "sslKey": "ssl/localhost-key.pem",
+      "sslCert": "ssl/localhost.pem"
+    }
+  }
+}
+```
+
+### Update UserEntity
+
+```csharp
+...
+public required byte[] PasswordHash { get; set; }
+    
+public required byte[] PasswordSalt { get; set; }
+...    
+```
+
+```bash
+dotnet ef migrations add UserEntityUpdated
+```
+
+```bash
+ dotnet ef database update
+```
+
+### Use DTOs
+
+Allow to limit data visibility of Database
+Lighter data transfer in application layers
+
+### Use the debbuger
+
+- Create configuration to attach process to debugger
+- Add breakpoints on code to analyse,
+- Run the debugger,
+- Navigate step by step,
+- Watch variables values, on mouseover in code or in variables view.
+
+
+
+
+
+
+
